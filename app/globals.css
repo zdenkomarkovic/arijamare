@@ -1,0 +1,29 @@
+@import "tailwindcss" layer(tailwind-base);
+
+/*
+ * CSS Custom Properties - popuni po potrebi za svaki sajt
+ *
+ * @theme {
+ *   --color-primary: oklch(0.5 0.2 250);
+ *   --font-sans: "Inter", sans-serif;
+ * }
+ */
+:root {
+  /* Boje - definisi za svaki sajt */
+  /* --color-primary: ; */
+  /* --color-secondary: ; */
+  /* --color-bg: ; */
+  /* --color-text: ; */
+
+  /* Tipografija - definisi za svaki sajt */
+  /* --font-sans: ; */
+  /* --font-serif: ; */
+  /* --font-mono: ; */
+}
+
+/* Dodatni custom stilovi idu ovde */
+
+@keyframes hero-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
