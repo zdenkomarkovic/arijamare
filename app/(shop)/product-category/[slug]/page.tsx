@@ -22,9 +22,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!category) return {}
 
   return buildMetadata({
-    title: category.name,
-    description: category.description,
-    url: `/kategorije/${slug}`,
+    title: category.seoTitle ?? category.name,
+    description: category.seoDescription ?? category.description,
+    url: `/product-category/${slug}/`,
   })
 }
 
@@ -46,11 +46,11 @@ export default async function KategorijaPage({ params, searchParams }: Props) {
       <nav className="text-sm text-gray-400 mb-8 flex items-center gap-2 flex-wrap">
         <Link href="/" className="hover:text-black transition-colors">Početna</Link>
         <span>/</span>
-        <Link href="/kategorije" className="hover:text-black transition-colors">Kategorije</Link>
+        <Link href="/product-category" className="hover:text-black transition-colors">Kategorije</Link>
         {category.parent && (
           <>
             <span>/</span>
-            <Link href={`/kategorije/${category.parent.slug}`} className="hover:text-black transition-colors">
+            <Link href={`/product-category/${category.parent.slug}`} className="hover:text-black transition-colors">
               {category.parent.name}
             </Link>
           </>

@@ -25,7 +25,8 @@ export const heroSlideType = defineType({
   ],
   preview: {
     select: { title: 'title', media: 'image', order: 'order' },
-    prepare({ title, media, order }: { title?: string; media?: unknown; order?: number }) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    prepare({ title, media, order }: { title?: string; media?: any; order?: number }) {
       return { title: title || `Slajd ${order ?? ''}`, media }
     },
   },

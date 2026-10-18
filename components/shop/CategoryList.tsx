@@ -20,7 +20,7 @@ export default function CategoryList({
         {categories.map((cat) => (
           <Link
             key={cat._id}
-            href={`/kategorije/${cat.slug}`}
+            href={`/product-category/${cat.slug}`}
             className="px-4 py-2 border border-gray-200 rounded-lg text-sm font-medium hover:border-black hover:bg-gray-50 transition-colors"
           >
             {cat.name}
@@ -35,7 +35,7 @@ export default function CategoryList({
       {categories.map((cat) => (
         <div key={cat._id} className="flex flex-col">
           <Link
-            href={`/kategorije/${cat.slug}`}
+            href={`/product-category/${cat.slug}`}
             className="group border border-gray-200 rounded-lg overflow-hidden hover:border-black transition-colors"
           >
             {cat.image ? (

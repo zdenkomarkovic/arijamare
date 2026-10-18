@@ -1,11 +1,13 @@
 import { sanityClient } from './client'
-import type { Category, Product, HeroSlide } from '@/types/shop'
+import type { Category, Product, HeroSlide, Post, SitePage } from '@/types/shop'
 
 const categoryFields = `
   _id,
   name,
   "slug": slug.current,
   description,
+  seoTitle,
+  seoDescription,
   image { asset, alt },
   "parent": parent->{ _id, name, "slug": slug.current }
 `
@@ -31,7 +33,10 @@ const productFields = `
 
 const productFieldsFull = `
   ${productFields},
-  description
+  description,
+  seoTitle,
+  seoDescription,
+  _updatedAt
 `
 
 export async function getAllCategories(): Promise<Category[]> {
@@ -140,4 +145,72 @@ export async function getHeroSlides(): Promise<HeroSlide[]> {
       order
     }`
   )
+}
+
+// ---------- Blog ----------
+export const POST_PAGE_SIZE = 9
+
+const postCardFields = `
+  _id,
+  title,
+  "slug": slug.current,
+  publishedAt,
+  excerpt,
+  categories[] { name, slug },
+  mainImage { asset, alt }
+`
+
+export async function getPosts(page = 1, category?: string): Promise<{ posts: Post[]; total: number }> {
+  const offset = (page - 1) * POST_PAGE_SIZE
+  const filter = category ? `*[_type == "post" && $category in categories[].slug]` : `*[_type == "post"]`
+  const params = category ? { category } : {}
+  const [posts, total] = await Promise.all([
+    sanityClient.fetch<Post[]>(
+      `${filter} | order(publishedAt desc) [${offset}...${offset + POST_PAGE_SIZE}] { ${postCardFields} }`,
+      params
+    ),
+    sanityClient.fetch<number>(`count(${filter})`, params),
+  ])
+  return { posts, total }
+}
+
+export async function getLatestPosts(limit = 3): Promise<Post[]> {
+  return sanityClient.fetch(
+    `*[_type == "post"] | order(publishedAt desc) [0...${limit}] { ${postCardFields} }`
+  )
+}
+
+export async function getPostBySlug(slug: string): Promise<Post | null> {
+  return sanityClient.fetch(
+    `*[_type == "post" && slug.current == $slug][0] { ${postCardFields}, modifiedAt, body, seoTitle, seoDescription }`,
+    { slug }
+  )
+}
+
+export async function getBlogCategories(): Promise<{ name: string; slug: string }[]> {
+  const all = await sanityClient.fetch<{ name: string; slug: string }[]>(`*[_type == "post"].categories[]{ name, slug }`)
+  return [...new Map(all.filter(Boolean).map((c) => [c.slug, c])).values()]
+}
+
+// ---------- Statične stranice ----------
+export async function getSitePage(slug: string): Promise<SitePage | null> {
+  return sanityClient.fetch(
+    `*[_type == "sitePage" && slug.current == $slug][0] { _id, title, "slug": slug.current, body, seoTitle, seoDescription }`,
+    { slug }
+  )
+}
+
+// ---------- Sitemap ----------
+export async function getSitemapData(): Promise<{
+  products: { slug: string; updated: string }[]
+  categories: { slug: string; updated: string }[]
+  posts: { slug: string; updated: string }[]
+  pages: { slug: string; updated: string }[]
+}> {
+  return sanityClient.fetch(`{
+    "products": *[_type == "product" && defined(slug.current)] { "slug": slug.current, "updated": _updatedAt },
+    "categories": *[_type == "category" && defined(slug.current)] { "slug": slug.current, "updated": _updatedAt },
+    "posts": *[_type == "post" && defined(slug.current)] { "slug": slug.current, "updated": coalesce(modifiedAt, _updatedAt) },
+    "pages": *[_type == "sitePage" && defined(slug.current) && !(slug.current in ["home", "blog", "prodavnica"])] { "slug": slug.current, "updated": _updatedAt }
+  }`)
 }

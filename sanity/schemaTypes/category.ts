@@ -1,9 +1,11 @@
 import { defineField, defineType } from 'sanity'
+import { seoFields, seoGroups } from './seoFields'
 
 export const categoryType = defineType({
   name: 'category',
   title: 'Kategorija',
   type: 'document',
+  groups: seoGroups,
   fields: [
     defineField({
       name: 'name',
@@ -40,6 +42,7 @@ export const categoryType = defineType({
         defineField({ name: 'alt', title: 'Alt tekst', type: 'string' }),
       ],
     }),
+    ...seoFields,
   ],
   preview: {
     select: { title: 'name', media: 'image' },

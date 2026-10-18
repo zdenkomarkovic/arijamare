@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-export const metadata = { title: 'Narudzbina primljena' }
+export const metadata = { title: 'Narudzbina primljena', robots: { index: false, follow: false } }
 
 export default function UspehPage() {
   return (

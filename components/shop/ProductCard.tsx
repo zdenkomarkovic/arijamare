@@ -15,7 +15,7 @@ export default function ProductCard({ product }: { product: Product }) {
 
   return (
     <div className="group border border-gray-200 rounded-lg overflow-hidden flex flex-col">
-      <Link href={`/proizvodi/${product.slug}`} className="block aspect-square relative bg-gray-50">
+      <Link href={`/shop/${product.slug}`} className="block aspect-square relative bg-gray-50">
         {image ? (
           <Image
             src={urlFor(image).width(400).height(400).fit('crop').url()}
@@ -42,7 +42,7 @@ export default function ProductCard({ product }: { product: Product }) {
             {product.category.name}
           </span>
         )}
-        <Link href={`/proizvodi/${product.slug}`} className="font-medium text-sm leading-tight hover:underline underline-offset-2">
+        <Link href={`/shop/${product.slug}`} className="font-medium text-sm leading-tight hover:underline underline-offset-2">
           {product.name}
         </Link>
 
@@ -83,7 +83,7 @@ export default function ProductCard({ product }: { product: Product }) {
         </div>
 
         <Link
-          href={`/proizvodi/${product.slug}`}
+          href={`/shop/${product.slug}`}
           className="w-full text-sm py-2 text-center border border-black rounded hover:bg-black hover:text-white transition-colors"
         >
           Vidi proizvod

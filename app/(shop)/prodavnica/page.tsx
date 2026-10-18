@@ -6,7 +6,18 @@ import SearchInput from '@/components/shop/SearchInput'
 import CategorySelect from '@/components/shop/CategorySelect'
 import Pagination from '@/components/shop/Pagination'
 
-export const metadata = { title: 'Svi proizvodi' }
+import type { Metadata } from 'next'
+import { getSitePage } from '@/lib/sanity/queries'
+import { buildMetadata } from '@/lib/metadata'
+
+export async function generateMetadata(): Promise<Metadata> {
+  const page = await getSitePage('prodavnica')
+  return buildMetadata({
+    title: page?.seoTitle ?? 'Prodavnica',
+    description: page?.seoDescription,
+    url: '/prodavnica/',
+  })
+}
 
 interface Props {
   searchParams: Promise<{ q?: string; kategorija?: string; page?: string }>
@@ -51,7 +62,7 @@ export default async function ProizvodiStranica({ searchParams }: Props) {
       {hasFilters && products.length === 0 && (
         <p className="text-gray-400 text-sm mb-6">
           Nema rezultata.{' '}
-          <Link href="/proizvodi" className="underline hover:text-black">
+          <Link href="/prodavnica" className="underline hover:text-black">
             Prikaži sve proizvode
           </Link>
         </p>

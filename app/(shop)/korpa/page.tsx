@@ -12,7 +12,7 @@ export default function KorpaPage() {
       <main className="max-w-2xl mx-auto px-4 py-20 text-center">
         <p className="text-gray-400 text-lg mb-6">Korpa je prazna.</p>
         <Link
-          href="/proizvodi"
+          href="/prodavnica"
           className="inline-block px-6 py-3 bg-black text-white rounded text-sm hover:bg-gray-800 transition-colors"
         >
           Pregledaj proizvode
@@ -52,7 +52,7 @@ export default function KorpaPage() {
           Nastavi na placanje
         </Link>
         <Link
-          href="/proizvodi"
+          href="/prodavnica"
           className="block w-full py-3 border border-gray-300 rounded text-center text-sm hover:border-black transition-colors"
         >
           Nastavi kupovinu

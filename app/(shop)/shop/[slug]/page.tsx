@@ -4,7 +4,9 @@ import { PortableText } from 'next-sanity'
 import type { Metadata } from 'next'
 import { getProductBySlug, getRelatedProducts } from '@/lib/sanity/queries'
 import { buildMetadata } from '@/lib/metadata'
-import { SITE_URL } from '@/lib/constants'
+import { SITE_URL, SITE_NAME } from '@/lib/constants'
+import { urlFor } from '@/lib/sanity/image'
+import { JsonLd } from '@/components/seo/JsonLd'
 import ProductGallery from '@/components/shop/ProductGallery'
 import AddToCartButton from '@/components/shop/AddToCartButton'
 import ShareButton from '@/components/shop/ShareButton'
@@ -20,15 +22,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!product) return {}
 
   const price = product.salePrice ?? product.price
-  const description = price != null
+  const fallback = price != null
     ? `${product.name} — ${price.toLocaleString('sr-RS')} RSD`
     : product.name
 
   return buildMetadata({
-    title: product.name,
-    description,
-    url: `/proizvodi/${slug}`,
-    type: 'website',
+    title: product.seoTitle ?? product.name,
+    description: product.seoDescription ?? fallback,
+    url: `/shop/${slug}/`,
+    image: product.images?.[0]?.asset
+      ? urlFor(product.images[0]).width(1200).height(630).fit('crop').url()
+      : undefined,
   })
 }
 
@@ -49,12 +53,12 @@ export default async function ProductPage({ params }: Props) {
       <nav className="text-sm text-gray-400 mb-8 flex items-center gap-2">
         <Link href="/" className="hover:text-black transition-colors">Početna</Link>
         <span>/</span>
-        <Link href="/proizvodi" className="hover:text-black transition-colors">Proizvodi</Link>
+        <Link href="/prodavnica/" className="hover:text-black transition-colors">Prodavnica</Link>
         {product.category && (
           <>
             <span>/</span>
             <Link
-              href={`/kategorije/${product.category.slug}`}
+              href={`/product-category/${product.category.slug}`}
               className="hover:text-black transition-colors"
             >
               {product.category.name}
@@ -72,7 +76,7 @@ export default async function ProductPage({ params }: Props) {
           <div>
             {product.category && (
               <Link
-                href={`/kategorije/${product.category.slug}`}
+                href={`/product-category/${product.category.slug}`}
                 className="text-xs text-gray-400 uppercase tracking-wide hover:text-black transition-colors"
               >
                 {product.category.name}
@@ -109,7 +113,7 @@ export default async function ProductPage({ params }: Props) {
             </span>
             <ShareButton
               title={product.name}
-              url={`${SITE_URL}/proizvodi/${slug}`}
+              url={`${SITE_URL}/shop/${slug}/`}
             />
           </div>
 
@@ -134,6 +138,32 @@ export default async function ProductPage({ params }: Props) {
           <ProductGrid products={related} />
         </section>
       )}
+      <JsonLd
+        data={{
+          '@context': 'https://schema.org',
+          '@type': 'Product',
+          name: product.name,
+          url: `${SITE_URL}/shop/${slug}/`,
+          description: product.seoDescription ?? product.name,
+          image: (product.images ?? []).map((img) => urlFor(img).width(1200).url()),
+          ...(product.category ? { category: product.category.name } : {}),
+          brand: { '@type': 'Brand', name: SITE_NAME },
+          ...(displayPrice != null
+            ? {
+                offers: {
+                  '@type': 'Offer',
+                  url: `${SITE_URL}/shop/${slug}/`,
+                  priceCurrency: 'RSD',
+                  price: displayPrice,
+                  availability: product.inStock
+                    ? 'https://schema.org/InStock'
+                    : 'https://schema.org/OutOfStock',
+                  itemCondition: 'https://schema.org/NewCondition',
+                },
+              }
+            : {}),
+        }}
+      />
     </main>
   )
 }

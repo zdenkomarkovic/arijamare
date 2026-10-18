@@ -1,7 +1,21 @@
 import type { Metadata } from 'next'
+import { Merriweather, Open_Sans } from 'next/font/google'
 import './globals.css'
 import { SITE_NAME, SITE_URL } from '@/lib/constants'
 import { CartProvider } from '@/lib/cart/CartContext'
+import { JsonLd } from '@/components/seo/JsonLd'
+
+const merriweather = Merriweather({
+  subsets: ['latin', 'latin-ext'],
+  weight: ['400', '700'],
+  variable: '--font-merriweather',
+  display: 'swap',
+})
+const openSans = Open_Sans({
+  subsets: ['latin', 'latin-ext'],
+  variable: '--font-open-sans',
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -9,7 +23,10 @@ export const metadata: Metadata = {
     default: SITE_NAME,
     template: `%s | ${SITE_NAME}`,
   },
-  description: 'Online prodavnica',
+  description:
+    'Organska eterična ulja, čajevi i kozmetika od hercegovačkog samoniklog bilja. Naručite online, plaćanje pouzećem, besplatna dostava preko 5.000 RSD.',
+  alternates: { canonical: SITE_URL + '/' },
+  icons: { icon: '/logo.webp' },
   openGraph: {
     type: 'website',
     locale: 'sr_RS',
@@ -23,9 +40,42 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="sr">
-      <body>
+    <html lang="sr" className={`${merriweather.variable} ${openSans.variable}`}>
+      <body className="font-sans">
         <CartProvider>{children}</CartProvider>
+        <JsonLd
+          data={{
+            '@context': 'https://schema.org',
+            '@graph': [
+              {
+                '@type': 'Organization',
+                '@id': `${SITE_URL}/#organization`,
+                name: SITE_NAME,
+                url: SITE_URL,
+                logo: `${SITE_URL}/logo.webp`,
+                telephone: '+381652036804',
+                email: 'info@arijamare.com',
+                sameAs: [
+                  'https://www.facebook.com/arijamare1980/',
+                  'https://www.instagram.com/arijamare',
+                ],
+              },
+              {
+                '@type': 'WebSite',
+                '@id': `${SITE_URL}/#website`,
+                url: SITE_URL,
+                name: SITE_NAME,
+                inLanguage: 'sr-RS',
+                publisher: { '@id': `${SITE_URL}/#organization` },
+                potentialAction: {
+                  '@type': 'SearchAction',
+                  target: `${SITE_URL}/prodavnica/?q={search_term_string}`,
+                  'query-input': 'required name=search_term_string',
+                },
+              },
+            ],
+          }}
+        />
       </body>
     </html>
   )

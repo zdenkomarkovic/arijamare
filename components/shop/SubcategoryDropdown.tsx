@@ -37,7 +37,7 @@ export default function SubcategoryDropdown({ subcategories, label }: { subcateg
           {subcategories.map((sub) => (
             <Link
               key={sub._id}
-              href={`/kategorije/${sub.slug}`}
+              href={`/product-category/${sub.slug}`}
               onClick={() => setOpen(false)}
               className="block px-4 py-2 text-sm text-gray-700 hover:text-black hover:bg-gray-50 transition-colors"
             >

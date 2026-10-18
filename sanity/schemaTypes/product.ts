@@ -1,4 +1,5 @@
 import { defineField, defineType } from 'sanity'
+import { seoFields, seoGroups } from './seoFields'
 
 function slugify(input: string) {
   return input
@@ -18,6 +19,7 @@ export const productType = defineType({
   name: 'product',
   title: 'Proizvod',
   type: 'document',
+  groups: seoGroups,
   fields: [
     defineField({
       name: 'name',
@@ -110,6 +112,7 @@ export const productType = defineType({
       type: 'boolean',
       initialValue: false,
     }),
+    ...seoFields,
   ],
   preview: {
     select: { title: 'name', subtitle: 'price', media: 'images.0' },

@@ -1,5 +1,13 @@
 @import "tailwindcss" layer(tailwind-base);
 
+@theme {
+  --color-brand: #24bb9f;
+  --color-brand-dark: #1a9a82;
+  --color-brand-soft: #eaf8f5;
+  --font-sans: var(--font-open-sans), system-ui, sans-serif;
+  --font-serif: var(--font-merriweather), Georgia, serif;
+}
+
 /*
  * CSS Custom Properties - popuni po potrebi za svaki sajt
  *

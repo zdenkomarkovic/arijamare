@@ -28,7 +28,7 @@ export default function CategoryDropdown({ categories }: { categories: Category[
 
   if (categories.length === 0) {
     return (
-      <Link href="/kategorije" className="hover:underline underline-offset-4">
+      <Link href="/product-category" className="hover:underline underline-offset-4">
         Kategorije
       </Link>
     )
@@ -60,7 +60,7 @@ export default function CategoryDropdown({ categories }: { categories: Category[
                 onMouseLeave={() => setHoveredId(null)}
               >
                 <Link
-                  href={`/kategorije/${cat.slug}`}
+                  href={`/product-category/${cat.slug}`}
                   onClick={close}
                   className={`flex items-center justify-between px-4 py-2 text-sm font-medium transition-colors ${isHovered ? 'bg-gray-50' : 'hover:bg-gray-50'}`}
                 >
@@ -77,7 +77,7 @@ export default function CategoryDropdown({ categories }: { categories: Category[
                     {cat.subcategories!.map((sub) => (
                       <Link
                         key={sub._id}
-                        href={`/kategorije/${sub.slug}`}
+                        href={`/product-category/${sub.slug}`}
                         onClick={close}
                         className="block px-4 py-2 text-sm text-gray-600 hover:text-black hover:bg-gray-50 transition-colors"
                       >
@@ -92,7 +92,7 @@ export default function CategoryDropdown({ categories }: { categories: Category[
 
           <div className="border-t border-gray-100 mt-1 pt-1">
             <Link
-              href="/kategorije"
+              href="/product-category"
               onClick={close}
               className="block px-4 py-2 text-xs text-gray-400 hover:text-black hover:bg-gray-50 transition-colors"
             >

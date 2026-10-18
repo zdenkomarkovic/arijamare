@@ -37,11 +37,13 @@ export function buildMetadata({
   publishedTime,
 }: BuildMetadataOptions = {}): Metadata {
   const fullTitle = title ? `${title} | ${SITE_NAME}` : SITE_NAME;
-  const canonicalUrl = url ?? SITE_URL;
+  // Canonical uvek apsolutan i sa trailing slash-om (isto kao na originalnom sajtu)
+  const path = url ?? "/";
+  const canonicalUrl = (path.startsWith("http") ? path : `${SITE_URL}${path}`).replace(/\/?$/, "/");
   const ogImage = image ?? `${SITE_URL}/og-image.png`; // Dodaj og-image.png u /public
 
   return {
-    title: fullTitle,
+    title: { absolute: fullTitle },
     description,
     metadataBase: new URL(SITE_URL),
     alternates: {
