@@ -12,7 +12,7 @@ export default function UspehPage() {
       </p>
       <Link
         href="/"
-        className="inline-block px-6 py-3 bg-black text-white rounded text-sm hover:bg-gray-800 transition-colors"
+        className="inline-block px-6 py-3 bg-brand text-white rounded text-sm hover:bg-brand-dark transition-colors"
       >
         Vrati se na pocetnu
       </Link>

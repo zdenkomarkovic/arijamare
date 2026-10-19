@@ -22,7 +22,7 @@ export default function CategorySelect({ categories }: { categories: Category[] 
     <select
       value={current}
       onChange={handleChange}
-      className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-black transition-colors bg-white"
+      className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-brand transition-colors bg-white"
     >
       <option value="">Sve kategorije</option>
       {categories.map((cat) => (

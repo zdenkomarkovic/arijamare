@@ -34,14 +34,14 @@ export default function CartItemRow({ item }: { item: CartItemType }) {
         <div className="flex items-center gap-2 mt-2">
           <button
             onClick={() => updateQuantity(item._id, item.quantity - 1)}
-            className="w-7 h-7 border border-gray-300 rounded text-lg leading-none hover:border-black"
+            className="w-7 h-7 border border-gray-300 rounded text-lg leading-none hover:border-brand"
           >
             −
           </button>
           <span className="text-sm w-6 text-center">{item.quantity}</span>
           <button
             onClick={() => updateQuantity(item._id, item.quantity + 1)}
-            className="w-7 h-7 border border-gray-300 rounded text-lg leading-none hover:border-black"
+            className="w-7 h-7 border border-gray-300 rounded text-lg leading-none hover:border-brand"
           >
             +
           </button>

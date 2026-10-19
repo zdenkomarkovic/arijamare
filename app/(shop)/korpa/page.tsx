@@ -13,7 +13,7 @@ export default function KorpaPage() {
         <p className="text-gray-400 text-lg mb-6">Korpa je prazna.</p>
         <Link
           href="/prodavnica"
-          className="inline-block px-6 py-3 bg-black text-white rounded text-sm hover:bg-gray-800 transition-colors"
+          className="inline-block px-6 py-3 bg-brand text-white rounded text-sm hover:bg-brand-dark transition-colors"
         >
           Pregledaj proizvode
         </Link>
@@ -47,13 +47,13 @@ export default function KorpaPage() {
         <p className="text-xs text-gray-400">Dostava se obracunava pri preuzimanju. Placanje pouzecem.</p>
         <Link
           href="/checkout"
-          className="block w-full py-3 bg-black text-white rounded text-center font-medium hover:bg-gray-800 transition-colors"
+          className="block w-full py-3 bg-brand text-white rounded text-center font-medium hover:bg-brand-dark transition-colors"
         >
           Nastavi na placanje
         </Link>
         <Link
           href="/prodavnica"
-          className="block w-full py-3 border border-gray-300 rounded text-center text-sm hover:border-black transition-colors"
+          className="block w-full py-3 border border-gray-300 rounded text-center text-sm hover:border-brand transition-colors"
         >
           Nastavi kupovinu
         </Link>

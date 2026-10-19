@@ -7,6 +7,7 @@ import RichText from '@/components/content/RichText'
 import ContactInfo from '@/components/content/ContactInfo'
 import Breadcrumbs from '@/components/seo/Breadcrumbs'
 import ProductGrid from '@/components/shop/ProductGrid'
+import type { PortableTextBlock } from '@/types/shop'
 
 // Landing stranice koje na originalnom sajtu postoje uz /product-category/... (zadržavamo URL-ove)
 const CATEGORY_LANDING: Record<string, string> = {
@@ -18,6 +19,20 @@ const CATEGORY_LANDING: Record<string, string> = {
 }
 
 const NOT_PAGES = ['home', 'blog', 'prodavnica']
+
+// Na kategorijskim stranicama FAQ ide ispod kartica proizvoda: sadržaj se deli na uvod i FAQ
+// (FAQ počinje prvim naslovom koji počinje sa „FAQ”).
+function splitAtFaq(body: PortableTextBlock[] = []) {
+  const i = body.findIndex(
+    (b) =>
+      b._type === 'block' &&
+      typeof b.style === 'string' &&
+      b.style.startsWith('h') &&
+      Array.isArray(b.children) &&
+      (b.children as { text?: string }[]).map((c) => c.text ?? '').join('').trim().toUpperCase().startsWith('FAQ'),
+  )
+  return i === -1 ? { intro: body, faq: [] } : { intro: body.slice(0, i), faq: body.slice(i) }
+}
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -44,12 +59,14 @@ export default async function StaticPage({ params }: Props) {
     ? await getProductsByCategory(categorySlug, 1)
     : { products: [], total: 0 }
 
+  const { intro, faq } = categorySlug ? splitAtFaq(page.body) : { intro: page.body ?? [], faq: [] }
+
   return (
     <main className="max-w-6xl mx-auto px-4 py-10">
       <Breadcrumbs items={[{ name: page.title }]} />
       <h1 className="text-3xl font-semibold mb-8 font-serif">{page.title}</h1>
       <div className="max-w-4xl">
-        <RichText value={page.body} />
+        <RichText value={intro} />
         {slug === 'kontakt' && <ContactInfo />}
       </div>
       {categorySlug && (
@@ -62,6 +79,11 @@ export default async function StaticPage({ params }: Props) {
               </Link>
             </p>
           )}
+        </section>
+      )}
+      {faq.length > 0 && (
+        <section className="max-w-4xl mt-14 pt-10 border-t border-gray-100">
+          <RichText value={faq} />
         </section>
       )}
     </main>

@@ -34,6 +34,12 @@ export const categoryType = defineType({
       options: { disableNew: true },
     }),
     defineField({
+      name: 'order',
+      title: 'Redosled u meniju',
+      type: 'number',
+      description: 'Manji broj se prikazuje ranije. Kategorije bez broja idu na kraj, po abecedi.',
+    }),
+    defineField({
       name: 'image',
       title: 'Slika',
       type: 'image',

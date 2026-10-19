@@ -14,7 +14,7 @@ export default function ProductCard({ product }: { product: Product }) {
   const canAddToCart = product.inStock && hasPrice
 
   return (
-    <div className="group border border-gray-200 rounded-lg overflow-hidden flex flex-col">
+    <div className="group border border-gray-200 rounded-xl overflow-hidden flex flex-col bg-white hover:shadow-lg hover:border-brand/40 transition-all duration-300">
       <Link href={`/shop/${product.slug}`} className="block aspect-square relative bg-gray-50">
         {image ? (
           <Image
@@ -30,7 +30,7 @@ export default function ProductCard({ product }: { product: Product }) {
           </div>
         )}
         {product.salePrice && (
-          <span className="absolute top-2 left-2 bg-black text-white text-xs px-2 py-1 rounded">
+          <span className="absolute top-2 left-2 bg-rose-600 text-white text-xs font-semibold px-2.5 py-1 rounded-full">
             Akcija
           </span>
         )}
@@ -38,13 +38,16 @@ export default function ProductCard({ product }: { product: Product }) {
 
       <div className="p-3 flex flex-col flex-1 gap-2">
         {product.category && (
-          <span className="text-xs text-gray-400 uppercase tracking-wide">
+          <span className="text-[11px] text-brand uppercase tracking-wider font-semibold">
             {product.category.name}
           </span>
         )}
-        <Link href={`/shop/${product.slug}`} className="font-medium text-sm leading-tight hover:underline underline-offset-2">
+        <Link href={`/shop/${product.slug}`} className="font-medium text-sm leading-snug font-serif hover:text-brand transition-colors">
           {product.name}
         </Link>
+        {product.shortDescription && (
+          <p className="text-xs text-gray-600 leading-relaxed line-clamp-3">{product.shortDescription}</p>
+        )}
 
         <div className="flex items-center justify-between gap-2 mt-auto">
           <div className="flex items-center gap-2">
@@ -74,7 +77,7 @@ export default function ProductCard({ product }: { product: Product }) {
                   image: product.images?.[0],
                 })
               }
-              className="flex-shrink-0 text-xs px-2 py-1 border border-black rounded hover:bg-black hover:text-white transition-colors"
+              className="flex-shrink-0 text-xs px-2 py-1 border border-brand text-brand rounded hover:bg-brand hover:text-white transition-colors"
               aria-label={`Dodaj ${product.name} u korpu`}
             >
               + Korpa
@@ -84,7 +87,7 @@ export default function ProductCard({ product }: { product: Product }) {
 
         <Link
           href={`/shop/${product.slug}`}
-          className="w-full text-sm py-2 text-center border border-black rounded hover:bg-black hover:text-white transition-colors"
+          className="w-full text-sm py-2 text-center border border-brand text-brand rounded hover:bg-brand hover:text-white transition-colors"
         >
           Vidi proizvod
         </Link>

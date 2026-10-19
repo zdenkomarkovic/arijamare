@@ -135,7 +135,7 @@ export default function ProductGallery({ images, productName }: Props) {
                   <span
                     key={i}
                     className={`block w-1.5 h-1.5 rounded-full transition-colors ${
-                      i === active ? 'bg-black' : 'bg-black/30'
+                      i === active ? 'bg-brand' : 'bg-black/30'
                     }`}
                   />
                 ))}
@@ -152,7 +152,7 @@ export default function ProductGallery({ images, productName }: Props) {
                 key={i}
                 onClick={() => setActive(i)}
                 className={`relative w-16 h-16 rounded overflow-hidden border-2 transition-colors ${
-                  i === active ? 'border-black' : 'border-transparent'
+                  i === active ? 'border-brand' : 'border-transparent'
                 }`}
                 aria-label={`Slika ${i + 1}`}
               >

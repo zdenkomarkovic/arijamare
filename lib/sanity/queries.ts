@@ -14,7 +14,7 @@ const categoryFields = `
 
 const categoryFieldsWithSubs = `
   ${categoryFields},
-  "subcategories": *[_type == "category" && parent._ref == ^._id] | order(name asc) {
+  "subcategories": *[_type == "category" && parent._ref == ^._id] | order(coalesce(order, 999) asc, name asc) {
     ${categoryFields}
   }
 `
@@ -23,6 +23,7 @@ const productFields = `
   _id,
   name,
   "slug": slug.current,
+  shortDescription,
   price,
   salePrice,
   inStock,
@@ -34,6 +35,8 @@ const productFields = `
 const productFieldsFull = `
   ${productFields},
   description,
+  summary,
+  reviews[] { _key, author, rating, date, text },
   seoTitle,
   seoDescription,
   _updatedAt

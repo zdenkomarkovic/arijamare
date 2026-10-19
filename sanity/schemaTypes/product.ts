@@ -95,10 +95,49 @@ export const productType = defineType({
       ],
     }),
     defineField({
+      name: 'summary',
+      title: 'Kratak tekst ispod cene',
+      type: 'array',
+      of: [{ type: 'block' }],
+      description: 'Prikazuje se na stranici proizvoda ispod cene. Podržava podebljan tekst.',
+    }),
+    defineField({
       name: 'description',
       title: 'Opis',
       type: 'array',
       of: [{ type: 'block' }],
+    }),
+    defineField({
+      name: 'shortDescription',
+      title: 'Kratak opis (prikazuje se na kartici)',
+      type: 'text',
+      rows: 3,
+      description: 'Jedna do dve rečenice o najbitnijem za ovo ulje. Prikazuje se na kartici proizvoda.',
+      validation: (r) => r.max(160).warning('Preporučeno do 160 karaktera da kartica ostane uredna.'),
+    }),
+    defineField({
+      name: 'reviews',
+      title: 'Recenzije',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          name: 'review',
+          fields: [
+            defineField({ name: 'author', title: 'Ime', type: 'string', validation: (r) => r.required() }),
+            defineField({
+              name: 'rating',
+              title: 'Ocena (1-5)',
+              type: 'number',
+              initialValue: 5,
+              validation: (r) => r.required().min(1).max(5).integer(),
+            }),
+            defineField({ name: 'date', title: 'Datum', type: 'datetime' }),
+            defineField({ name: 'text', title: 'Tekst', type: 'text', rows: 4 }),
+          ],
+          preview: { select: { title: 'author', subtitle: 'text' } },
+        },
+      ],
     }),
     defineField({
       name: 'inStock',

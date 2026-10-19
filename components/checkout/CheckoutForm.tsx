@@ -70,7 +70,7 @@ export default function CheckoutForm() {
         value={form[name] ?? ''}
         onChange={handleChange}
         required={required}
-        className="border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-black"
+        className="border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-brand"
       />
     </div>
   )
@@ -97,7 +97,7 @@ export default function CheckoutForm() {
           value={form.napomena ?? ''}
           onChange={handleChange}
           rows={3}
-          className="border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-black resize-none"
+          className="border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-brand resize-none"
         />
       </div>
 
@@ -114,7 +114,7 @@ export default function CheckoutForm() {
       <button
         type="submit"
         disabled={loading || items.length === 0}
-        className="w-full py-3 bg-black text-white rounded font-medium text-sm hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full py-3 bg-brand text-white rounded font-medium text-sm hover:bg-brand-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {loading ? 'Slanje...' : 'Posalji narudzbinu'}
       </button>

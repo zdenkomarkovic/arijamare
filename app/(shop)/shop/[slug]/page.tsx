@@ -1,6 +1,5 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { PortableText } from 'next-sanity'
 import type { Metadata } from 'next'
 import { getProductBySlug, getRelatedProducts } from '@/lib/sanity/queries'
 import { buildMetadata } from '@/lib/metadata'
@@ -11,6 +10,11 @@ import ProductGallery from '@/components/shop/ProductGallery'
 import AddToCartButton from '@/components/shop/AddToCartButton'
 import ShareButton from '@/components/shop/ShareButton'
 import ProductGrid from '@/components/shop/ProductGrid'
+import ProductTabs from '@/components/shop/ProductTabs'
+import StarRating from '@/components/shop/StarRating'
+import RichText from '@/components/content/RichText'
+import OrderByPhone from '@/components/content/OrderByPhone'
+import Breadcrumbs from '@/components/seo/Breadcrumbs'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -47,57 +51,52 @@ export default async function ProductPage({ params }: Props) {
     : []
 
   const displayPrice = product.salePrice ?? product.price
+  const reviews = product.reviews ?? []
+  const avgRating = reviews.length
+    ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
+    : 0
+  const hasSummary = (product.summary?.length ?? 0) > 0
+  const hasDescription = (product.description?.length ?? 0) > 0
 
   return (
     <main className="max-w-6xl mx-auto px-4 py-10">
-      <nav className="text-sm text-gray-400 mb-8 flex items-center gap-2">
-        <Link href="/" className="hover:text-black transition-colors">Početna</Link>
-        <span>/</span>
-        <Link href="/prodavnica/" className="hover:text-black transition-colors">Prodavnica</Link>
-        {product.category && (
-          <>
-            <span>/</span>
-            <Link
-              href={`/product-category/${product.category.slug}`}
-              className="hover:text-black transition-colors"
-            >
-              {product.category.name}
-            </Link>
-          </>
-        )}
-        <span>/</span>
-        <span className="text-gray-600 truncate">{product.name}</span>
-      </nav>
+      <Breadcrumbs
+        items={[
+          { name: 'Prodavnica', href: '/prodavnica/' },
+          ...(product.category
+            ? [{ name: product.category.name, href: `/product-category/${product.category.slug}/` }]
+            : []),
+          { name: product.name },
+        ]}
+      />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16">
         <ProductGallery images={product.images ?? []} productName={product.name} />
 
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-5">
           <div>
-            {product.category && (
-              <Link
-                href={`/product-category/${product.category.slug}`}
-                className="text-xs text-gray-400 uppercase tracking-wide hover:text-black transition-colors"
-              >
-                {product.category.name}
-              </Link>
+            <h1 className="text-2xl md:text-3xl font-semibold font-serif leading-tight">{product.name}</h1>
+            {reviews.length > 0 && (
+              <p className="mt-2 flex items-center gap-2 text-sm text-gray-500">
+                <StarRating value={avgRating} size="sm" />
+                <span>({reviews.length} {reviews.length === 1 ? 'recenzija korisnika' : 'recenzija korisnika'})</span>
+              </p>
             )}
-            <h1 className="text-2xl font-semibold mt-1">{product.name}</h1>
           </div>
 
           <div className="flex items-baseline gap-3">
             {displayPrice != null ? (
               <>
-                <span className="text-2xl font-bold">
+                <span className="text-3xl font-bold text-brand-dark">
                   {displayPrice.toLocaleString('sr-RS')} RSD
                 </span>
                 {product.salePrice && product.price != null && (
-                  <span className="text-base text-gray-400 line-through">
+                  <span className="text-lg text-gray-400 line-through">
                     {product.price.toLocaleString('sr-RS')} RSD
                   </span>
                 )}
                 {product.salePrice && (
-                  <span className="text-sm bg-black text-white px-2 py-0.5 rounded">
+                  <span className="text-sm bg-rose-600 text-white px-2.5 py-0.5 rounded-full font-semibold">
                     Akcija
                   </span>
                 )}
@@ -107,34 +106,48 @@ export default async function ProductPage({ params }: Props) {
             )}
           </div>
 
+          {/* Kratak tekst ispod cene */}
+          {hasSummary ? (
+            <div className="text-sm text-gray-700 [&_h4]:!mt-0 [&_h4]:!mb-2 [&_h4]:text-base [&_p]:!mb-3 [&_p:last-child]:!mb-0">
+              <RichText value={product.summary} />
+            </div>
+          ) : (
+            product.shortDescription && (
+              <p className="text-sm text-gray-700 leading-relaxed">{product.shortDescription}</p>
+            )
+          )}
+
           <div className="flex items-center justify-between">
             <span className={`text-sm font-medium ${product.inStock ? 'text-green-600' : 'text-red-500'}`}>
               {product.inStock ? 'Na stanju' : 'Nije na stanju'}
             </span>
-            <ShareButton
-              title={product.name}
-              url={`${SITE_URL}/shop/${slug}/`}
-            />
+            <ShareButton title={product.name} url={`${SITE_URL}/shop/${slug}/`} />
           </div>
 
           <AddToCartButton product={product} />
 
-          {product.description && product.description.length > 0 && (
-            <div className="pt-6 border-t border-gray-100">
-              <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500 mb-3">
-                Opis
-              </h2>
-              <div className="prose prose-sm max-w-none text-gray-700 leading-relaxed">
-                <PortableText value={product.description} />
-              </div>
-            </div>
+          <OrderByPhone />
+
+          {product.category && (
+            <p className="text-sm text-gray-500">
+              Kategorija:{' '}
+              <Link href={`/product-category/${product.category.slug}/`} className="text-brand hover:underline">
+                {product.category.name}
+              </Link>
+            </p>
           )}
         </div>
       </div>
 
+      <ProductTabs
+        hasDescription={hasDescription}
+        reviews={reviews}
+        description={<RichText value={product.description} />}
+      />
+
       {related.length > 0 && (
         <section className="mt-16 pt-10 border-t border-gray-100">
-          <h2 className="text-lg font-semibold mb-6">Može te zanimati</h2>
+          <h2 className="text-xl font-semibold mb-6 font-serif">Može vas zanimati</h2>
           <ProductGrid products={related} />
         </section>
       )}
@@ -148,6 +161,22 @@ export default async function ProductPage({ params }: Props) {
           image: (product.images ?? []).map((img) => urlFor(img).width(1200).url()),
           ...(product.category ? { category: product.category.name } : {}),
           brand: { '@type': 'Brand', name: SITE_NAME },
+          ...(reviews.length
+            ? {
+                aggregateRating: {
+                  '@type': 'AggregateRating',
+                  ratingValue: Number(avgRating.toFixed(2)),
+                  reviewCount: reviews.length,
+                },
+                review: reviews.slice(0, 10).map((r) => ({
+                  '@type': 'Review',
+                  author: { '@type': 'Person', name: r.author },
+                  reviewRating: { '@type': 'Rating', ratingValue: r.rating, bestRating: 5 },
+                  ...(r.text ? { reviewBody: r.text } : {}),
+                  ...(r.date ? { datePublished: r.date } : {}),
+                })),
+              }
+            : {}),
           ...(displayPrice != null
             ? {
                 offers: {

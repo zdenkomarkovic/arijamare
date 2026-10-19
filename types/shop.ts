@@ -15,6 +15,9 @@ export interface Product {
   name: string
   slug: string
   description?: PortableTextBlock[]
+  summary?: PortableTextBlock[]
+  reviews?: Review[]
+  shortDescription?: string
   price?: number
   salePrice?: number
   images: SanityImage[]
@@ -85,4 +88,12 @@ export interface SitePage {
   body?: PortableTextBlock[]
   seoTitle?: string
   seoDescription?: string
+}
+
+export interface Review {
+  _key: string
+  author: string
+  rating: number
+  date?: string
+  text?: string
 }

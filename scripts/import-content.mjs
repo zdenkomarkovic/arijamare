@@ -87,9 +87,16 @@ for (const p of pages) {
 
 // ---------- Blog ----------
 const wpCats = Object.fromEntries((await all('/categories?_fields=id,name,slug')).map((c) => [c.id, { name: c.name, slug: c.slug }]))
-const posts = await all('/posts?_embed=wp:featuredmedia&_fields=id,slug,date,modified,title,excerpt,content,categories,yoast_head_json,_embedded')
+const posts = await all('/posts?_fields=id,slug,date,modified,title,excerpt,content,categories,featured_media,yoast_head_json')
+// Naslovne slike: featured_media je samo ID, pa se URL-ovi uzimaju iz /media
+const mediaIds = [...new Set(posts.map((p) => p.featured_media).filter(Boolean))]
+const mediaById = {}
+for (let i = 0; i < mediaIds.length; i += 50) {
+  const chunk = mediaIds.slice(i, i + 50)
+  for (const m of await all(`/media?include=${chunk.join(',')}&_fields=id,source_url,alt_text`)) mediaById[m.id] = m
+}
 for (const p of posts) {
-  const media = p._embedded?.['wp:featuredmedia']?.[0]
+  const media = mediaById[p.featured_media]
   const body = await htmlToBlocks(p.content.rendered, { uploadImage })
   const mainImage = media?.source_url
     ? { _type: 'image', asset: { _type: 'reference', _ref: await uploadImage(media.source_url) }, alt: media.alt_text || plainText(p.title.rendered) }

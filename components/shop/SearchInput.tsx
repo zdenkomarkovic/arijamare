@@ -34,7 +34,7 @@ export default function SearchInput({ placeholder = 'Pretraži proizvode...' }: 
         value={value}
         onChange={(e) => setValue(e.target.value)}
         placeholder={placeholder}
-        className="w-full md:w-72 px-4 py-2 pr-8 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-black transition-colors"
+        className="w-full md:w-72 px-4 py-2 pr-8 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-brand transition-colors"
       />
       {value && (
         <button

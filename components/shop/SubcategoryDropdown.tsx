@@ -21,7 +21,7 @@ export default function SubcategoryDropdown({ subcategories, label }: { subcateg
     <div className="relative inline-block" onMouseEnter={show} onMouseLeave={hide}>
       <button
         onClick={() => setOpen((o) => !o)}
-        className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium hover:border-black transition-colors bg-white"
+        className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium hover:border-brand transition-colors bg-white"
       >
         {label}
         <svg

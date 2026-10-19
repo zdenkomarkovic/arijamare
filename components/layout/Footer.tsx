@@ -9,7 +9,7 @@ export default function Footer() {
     <footer className="border-t border-gray-200 mt-auto bg-brand-soft/40">
       <div className="max-w-6xl mx-auto px-4 py-10 grid gap-8 md:grid-cols-3 text-sm text-gray-600">
         <div>
-          <Image src="/logo.webp" alt={SITE_NAME} width={140} height={48} className="h-10 w-auto mb-4" />
+          <Image src="/logo.webp" alt={SITE_NAME} width={240} height={82} className="h-20 w-auto mb-4" />
           <p>
             Tradicija poslovanja duga dve decenije nas je učinila vrlo prepoznatljivim na tržištu organske
             kozmetike. Zadovoljni klijenti nas preporučuju kao pouzdane proizvođače eteričnih ulja i drugih,

@@ -44,7 +44,7 @@ export default function Pagination({ total, pageSize = 12 }: Props) {
       <button
         onClick={() => goTo(currentPage - 1)}
         disabled={currentPage === 1}
-        className="px-3 py-2 text-sm border border-gray-200 rounded-lg hover:border-black disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+        className="px-3 py-2 text-sm border border-gray-200 rounded-lg hover:border-brand disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
       >
         ←
       </button>
@@ -60,8 +60,8 @@ export default function Pagination({ total, pageSize = 12 }: Props) {
             onClick={() => goTo(p)}
             className={`min-w-[36px] px-3 py-2 text-sm border rounded-lg transition-colors ${
               p === currentPage
-                ? 'bg-black text-white border-black'
-                : 'border-gray-200 hover:border-black'
+                ? 'bg-brand text-white border-black'
+                : 'border-gray-200 hover:border-brand'
             }`}
           >
             {p}
@@ -72,7 +72,7 @@ export default function Pagination({ total, pageSize = 12 }: Props) {
       <button
         onClick={() => goTo(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="px-3 py-2 text-sm border border-gray-200 rounded-lg hover:border-black disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+        className="px-3 py-2 text-sm border border-gray-200 rounded-lg hover:border-brand disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
       >
         →
       </button>

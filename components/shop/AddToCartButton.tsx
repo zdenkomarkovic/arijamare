@@ -71,7 +71,7 @@ export default function AddToCartButton({ product }: { product: Product }) {
 
       <button
         onClick={handleAdd}
-        className="w-full py-3 bg-black text-white rounded hover:bg-gray-800 transition-colors"
+        className="w-full py-3 bg-brand text-white rounded hover:bg-brand-dark transition-colors"
       >
         {added ? 'Dodato u korpu ✓' : 'Dodaj u korpu'}
       </button>
