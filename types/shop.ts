@@ -62,6 +62,7 @@ export interface OrderFormData {
   grad: string
   postanskiBroj: string
   napomena?: string
+  marketingConsent?: boolean
 }
 
 export interface Post {
