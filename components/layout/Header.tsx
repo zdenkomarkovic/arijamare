@@ -23,7 +23,7 @@ const NAV_LINKS: NavLink[] = [
   { href: "/", label: "Početna" },
   { href: "/prodavnica/", label: "Prodavnica" },
   { href: "/etericna-ulja/", label: "Eterična ulja", categorySlug: "etericna-ulja" },
-  { href: "/prirodni-cajevi/", label: "Čajevi", categorySlug: "biljni-cajevi" },
+  { href: "/biljni-cajevi/", label: "Čajevi", categorySlug: "biljni-cajevi" },
   { href: "/kozmetika/", label: "Kozmetika", categorySlug: "kozmetika" },
   { href: "/hidrolati/", label: "Hidrolati", categorySlug: "hidrolati" },
   { href: "/hladno-cedjena-ulja/", label: "Hladno ceđena ulja", categorySlug: "hladno-cedjena-ulja" },

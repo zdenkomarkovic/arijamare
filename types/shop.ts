@@ -5,6 +5,9 @@ export interface Category {
   description?: string
   seoTitle?: string
   seoDescription?: string
+  body?: PortableTextBlock[]
+  pageSeoTitle?: string
+  pageSeoDescription?: string
   image?: SanityImage
   parent?: { _id: string; name: string; slug: string }
   subcategories?: Category[]
@@ -40,12 +43,6 @@ export interface PortableTextBlock {
   [key: string]: unknown
 }
 
-export interface HeroSlide {
-  _id: string
-  image: SanityImage
-  order: number
-}
-
 export interface CartItem {
   _id: string
   name: string
@@ -76,15 +73,6 @@ export interface Post {
   excerpt?: string
   categories?: { name: string; slug: string }[]
   mainImage?: SanityImage
-  body?: PortableTextBlock[]
-  seoTitle?: string
-  seoDescription?: string
-}
-
-export interface SitePage {
-  _id: string
-  title: string
-  slug: string
   body?: PortableTextBlock[]
   seoTitle?: string
   seoDescription?: string

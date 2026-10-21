@@ -1,24 +1,12 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import type { Metadata } from 'next'
-import { getSitePage, getProductsByCategory } from '@/lib/sanity/queries'
+import { getLandingCategory, getProductsByCategory } from '@/lib/sanity/queries'
 import { buildMetadata } from '@/lib/metadata'
 import RichText from '@/components/content/RichText'
-import ContactInfo from '@/components/content/ContactInfo'
 import Breadcrumbs from '@/components/seo/Breadcrumbs'
 import ProductGrid from '@/components/shop/ProductGrid'
 import type { PortableTextBlock } from '@/types/shop'
-
-// Landing stranice koje na originalnom sajtu postoje uz /product-category/... (zadržavamo URL-ove)
-const CATEGORY_LANDING: Record<string, string> = {
-  'etericna-ulja': 'etericna-ulja',
-  hidrolati: 'hidrolati',
-  kozmetika: 'kozmetika',
-  'prirodni-cajevi': 'biljni-cajevi',
-  'hladno-cedjena-ulja': 'hladno-cedjena-ulja',
-}
-
-const NOT_PAGES = ['home', 'blog', 'prodavnica']
 
 // Na kategorijskim stranicama FAQ ide ispod kartica proizvoda: sadržaj se deli na uvod i FAQ
 // (FAQ počinje prvim naslovom koji počinje sa „FAQ”).
@@ -40,47 +28,43 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
-  const page = await getSitePage(slug)
-  if (!page) return {}
+  const category = await getLandingCategory(slug)
+  if (!category) return {}
   return buildMetadata({
-    title: page.seoTitle ?? page.title,
-    description: page.seoDescription,
+    title: category.pageSeoTitle ?? category.seoTitle ?? category.name,
+    description: category.pageSeoDescription ?? category.seoDescription ?? category.description,
     url: `/${slug}/`,
   })
 }
 
-export default async function StaticPage({ params }: Props) {
+// Svaka glavna kategorija iz Sanity-ja ima svoju stranicu na /naziv-kategorije/ (podkategorije nemaju,
+// one se prikazuju unutar nadkategorije). Statične stranice (o-nama, kontakt...) su u kodu.
+export default async function CategoryLandingPage({ params }: Props) {
   const { slug } = await params
-  const page = NOT_PAGES.includes(slug) ? null : await getSitePage(slug)
-  if (!page) notFound()
+  const category = await getLandingCategory(slug)
+  if (!category) notFound()
 
-  const categorySlug = CATEGORY_LANDING[slug]
-  const { products, total } = categorySlug
-    ? await getProductsByCategory(categorySlug, 1)
-    : { products: [], total: 0 }
-
-  const { intro, faq } = categorySlug ? splitAtFaq(page.body) : { intro: page.body ?? [], faq: [] }
+  const { products, total } = await getProductsByCategory(slug, 1)
+  const { intro, faq } = splitAtFaq(category.body)
 
   return (
     <main className="max-w-6xl mx-auto px-4 py-10">
-      <Breadcrumbs items={[{ name: page.title }]} />
-      <h1 className="text-3xl font-semibold mb-8 font-serif">{page.title}</h1>
+      <Breadcrumbs items={[{ name: category.name }]} />
+      <h1 className="text-3xl font-semibold mb-8 font-serif">{category.name}</h1>
       <div className="max-w-4xl">
+        {intro.length === 0 && category.description && <p className="text-gray-700">{category.description}</p>}
         <RichText value={intro} />
-        {slug === 'kontakt' && <ContactInfo />}
       </div>
-      {categorySlug && (
-        <section className="mt-12">
-          <ProductGrid products={products} />
-          {total > products.length && (
-            <p className="mt-6 text-center">
-              <Link href={`/product-category/${categorySlug}/`} className="text-brand underline underline-offset-4">
-                Pogledaj sve proizvode ({total})
-              </Link>
-            </p>
-          )}
-        </section>
-      )}
+      <section className="mt-12">
+        <ProductGrid products={products} emptyMessage="Nema proizvoda u ovoj kategoriji." />
+        {total > products.length && (
+          <p className="mt-6 text-center">
+            <Link href={`/product-category/${slug}/`} className="text-brand underline underline-offset-4">
+              Pogledaj sve proizvode ({total})
+            </Link>
+          </p>
+        )}
+      </section>
       {faq.length > 0 && (
         <section className="max-w-4xl mt-14 pt-10 border-t border-gray-100">
           <RichText value={faq} />

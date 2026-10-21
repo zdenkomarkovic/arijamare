@@ -1,5 +1,5 @@
 import { sanityClient } from './client'
-import type { Category, Product, HeroSlide, Post, SitePage } from '@/types/shop'
+import type { Category, Product, Post } from '@/types/shop'
 
 const categoryFields = `
   _id,
@@ -140,16 +140,6 @@ export async function getRelatedProducts(categorySlug: string, excludeSlug: stri
   )
 }
 
-export async function getHeroSlides(): Promise<HeroSlide[]> {
-  return sanityClient.fetch(
-    `*[_type == "heroSlide" && defined(image.asset)] | order(order asc) {
-      _id,
-      image { asset, alt },
-      order
-    }`
-  )
-}
-
 // ---------- Blog ----------
 export const POST_PAGE_SIZE = 9
 
@@ -195,10 +185,9 @@ export async function getBlogCategories(): Promise<{ name: string; slug: string 
   return [...new Map(all.filter(Boolean).map((c) => [c.slug, c])).values()]
 }
 
-// ---------- Statične stranice ----------
-export async function getSitePage(slug: string): Promise<SitePage | null> {
+export async function getLandingCategory(slug: string): Promise<Category | null> {
   return sanityClient.fetch(
-    `*[_type == "sitePage" && slug.current == $slug][0] { _id, title, "slug": slug.current, body, seoTitle, seoDescription }`,
+    `*[_type == "category" && slug.current == $slug && !defined(parent)][0] { ${categoryFields}, body, pageSeoTitle, pageSeoDescription }`,
     { slug }
   )
 }
@@ -206,14 +195,12 @@ export async function getSitePage(slug: string): Promise<SitePage | null> {
 // ---------- Sitemap ----------
 export async function getSitemapData(): Promise<{
   products: { slug: string; updated: string }[]
-  categories: { slug: string; updated: string }[]
+  categories: { slug: string; updated: string; isMain: boolean }[]
   posts: { slug: string; updated: string }[]
-  pages: { slug: string; updated: string }[]
 }> {
   return sanityClient.fetch(`{
     "products": *[_type == "product" && defined(slug.current)] { "slug": slug.current, "updated": _updatedAt },
-    "categories": *[_type == "category" && defined(slug.current)] { "slug": slug.current, "updated": _updatedAt },
-    "posts": *[_type == "post" && defined(slug.current)] { "slug": slug.current, "updated": coalesce(modifiedAt, _updatedAt) },
-    "pages": *[_type == "sitePage" && defined(slug.current) && !(slug.current in ["home", "blog", "prodavnica"])] { "slug": slug.current, "updated": _updatedAt }
+    "categories": *[_type == "category" && defined(slug.current)] { "slug": slug.current, "updated": _updatedAt, "isMain": !defined(parent) },
+    "posts": *[_type == "post" && defined(slug.current)] { "slug": slug.current, "updated": coalesce(modifiedAt, _updatedAt) }
   }`)
 }

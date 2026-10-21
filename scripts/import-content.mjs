@@ -61,29 +61,7 @@ for (const c of catSeo) {
 }
 console.log('SEO kategorije:', catSeo.length)
 
-// ---------- Statične stranice ----------
-const SKIP_PAGES = new Set(['evercompare', 'hvala', 'my-account', 'checkout', 'cart', 'home', 'homepage-1'])
-const pages = await all('/pages?_fields=id,slug,link,title,content,yoast_head_json')
-for (const p of pages) {
-  const isHome = new URL(p.link).pathname === '/'
-  if (!isHome && SKIP_PAGES.has(p.slug)) continue
-  let body = []
-  const seoOnly = isHome || p.slug === 'blog' || p.slug === 'prodavnica'
-  if (!seoOnly) {
-    body = await htmlToBlocks(p.content.rendered, { uploadImage })
-    // naslov h1 stranice se renderuje posebno
-    if (body[0]?.style === 'h2' && plainText(p.title.rendered) === body[0].children.map((c) => c.text).join('')) body.shift()
-  }
-  await put({
-    _id: `page-${isHome ? 'home' : p.slug}`,
-    _type: 'sitePage',
-    title: plainText(p.title.rendered),
-    slug: { _type: 'slug', current: isHome ? 'home' : p.slug },
-    body,
-    ...seo(p.yoast_head_json),
-  })
-  console.log('stranica:', p.slug || 'home', `(${body.length} blokova)`)
-}
+// Statične stranice (o-nama, kontakt...) su u kodu, ne u Sanity-ju.
 
 // ---------- Blog ----------
 const wpCats = Object.fromEntries((await all('/categories?_fields=id,name,slug')).map((c) => [c.id, { name: c.name, slug: c.slug }]))

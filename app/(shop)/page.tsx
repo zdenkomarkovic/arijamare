@@ -8,23 +8,18 @@ import {
   getFeaturedProducts,
   getAllCategories,
   getLatestPosts,
-  getSitePage,
 } from '@/lib/sanity/queries'
 import { buildMetadata } from '@/lib/metadata'
 import { CHANNELS } from '@/lib/contact'
 
 export const revalidate = 300
 
-export async function generateMetadata(): Promise<Metadata> {
-  const home = await getSitePage('home')
-  return buildMetadata({
-    title: home?.seoTitle ?? 'Organska proizvodnja',
-    description:
-      home?.seoDescription ??
-      'Organska eterična ulja, čajevi i kozmetika od hercegovačkog samoniklog bilja. Naručite online, plaćanje pouzećem, besplatna dostava.',
-    url: '/',
-  })
-}
+export const metadata: Metadata = buildMetadata({
+  title: 'Organska proizvodnja',
+  description:
+    'Organska eterična ulja, čajevi i kozmetika od hercegovačkog samoniklog bilja. Naručite online, platite pouzećem, besplatna dostava.',
+  url: '/',
+})
 
 const VALUES = [
   { title: 'Besplatna dostava', text: 'Za porudžbine preko 5.000 RSD', icon: 'M3 7h11v9H3zM14 10h4l3 3v3h-7M7 19a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm10 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3z' },

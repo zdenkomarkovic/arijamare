@@ -2,10 +2,11 @@
 
 import Link from 'next/link'
 import { useCart } from '@/lib/cart/CartContext'
+import { FREE_SHIPPING_THRESHOLD } from '@/lib/shipping'
 import CartItemRow from '@/components/cart/CartItem'
 
 export default function KorpaPage() {
-  const { items, totalPrice, clearCart } = useCart()
+  const { items, totalPrice, shippingPrice, grandTotal, clearCart } = useCart()
 
   if (items.length === 0) {
     return (
@@ -40,11 +41,21 @@ export default function KorpaPage() {
       </div>
 
       <div className="border-t border-gray-200 pt-6 space-y-4">
-        <div className="flex justify-between text-lg font-semibold">
-          <span>Ukupno</span>
+        <div className="flex justify-between text-sm text-gray-600">
+          <span>Iznos porudzbine</span>
           <span>{totalPrice.toLocaleString('sr-RS')} RSD</span>
         </div>
-        <p className="text-xs text-gray-400">Dostava se obracunava pri preuzimanju. Placanje pouzecem.</p>
+        <div className="flex justify-between text-sm text-gray-600">
+          <span>Dostava</span>
+          <span>{shippingPrice === 0 ? 'Besplatna' : `${shippingPrice.toLocaleString('sr-RS')} RSD`}</span>
+        </div>
+        <div className="flex justify-between text-lg font-semibold">
+          <span>Ukupno</span>
+          <span>{grandTotal.toLocaleString('sr-RS')} RSD</span>
+        </div>
+        <p className="text-xs text-gray-400">
+          Besplatna dostava za kupovinu preko {FREE_SHIPPING_THRESHOLD.toLocaleString('sr-RS')} din. Placanje pouzecem.
+        </p>
         <Link
           href="/checkout"
           className="block w-full py-3 bg-brand text-white rounded text-center font-medium hover:bg-brand-dark transition-colors"

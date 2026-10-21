@@ -1,7 +1,7 @@
 import { Suspense } from 'react'
 import Link from 'next/link'
 import type { Metadata } from 'next'
-import { getPosts, getBlogCategories, getSitePage, POST_PAGE_SIZE } from '@/lib/sanity/queries'
+import { getPosts, getBlogCategories, POST_PAGE_SIZE } from '@/lib/sanity/queries'
 import { buildMetadata } from '@/lib/metadata'
 import Pagination from '@/components/shop/Pagination'
 import Breadcrumbs from '@/components/seo/Breadcrumbs'
@@ -11,14 +11,11 @@ interface Props {
   searchParams: Promise<{ page?: string }>
 }
 
-export async function generateMetadata(): Promise<Metadata> {
-  const page = await getSitePage('blog')
-  return buildMetadata({
-    title: page?.seoTitle ?? 'Blog',
-    description: page?.seoDescription ?? 'Blog o zdravlju, aromaterapiji i eteričnim uljima.',
-    url: '/blog/',
-  })
-}
+export const metadata: Metadata = buildMetadata({
+  title: 'Blog',
+  description: 'Blog o zdravlju, aromaterapiji i eteričnim uljima.',
+  url: '/blog/',
+})
 
 export default async function BlogPage({ searchParams }: Props) {
   const { page } = await searchParams

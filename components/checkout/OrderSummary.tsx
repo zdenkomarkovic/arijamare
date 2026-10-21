@@ -4,7 +4,7 @@ import { useCart } from '@/lib/cart/CartContext'
 import CartItemRow from '@/components/cart/CartItem'
 
 export default function OrderSummary() {
-  const { items, totalPrice } = useCart()
+  const { items, totalPrice, shippingPrice, grandTotal } = useCart()
 
   if (items.length === 0) return null
 
@@ -14,9 +14,17 @@ export default function OrderSummary() {
       {items.map((item) => (
         <CartItemRow key={item._id} item={item} />
       ))}
-      <div className="flex justify-between items-center pt-4 font-semibold">
-        <span>Ukupno</span>
+      <div className="flex justify-between items-center pt-4 text-sm text-gray-600">
+        <span>Iznos porudzbine</span>
         <span>{totalPrice.toLocaleString('sr-RS')} RSD</span>
+      </div>
+      <div className="flex justify-between items-center pt-2 text-sm text-gray-600">
+        <span>Dostava</span>
+        <span>{shippingPrice === 0 ? 'Besplatna' : `${shippingPrice.toLocaleString('sr-RS')} RSD`}</span>
+      </div>
+      <div className="flex justify-between items-center pt-2 font-semibold">
+        <span>Ukupno</span>
+        <span>{grandTotal.toLocaleString('sr-RS')} RSD</span>
       </div>
     </div>
   )

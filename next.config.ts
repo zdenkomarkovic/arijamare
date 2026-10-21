@@ -25,6 +25,7 @@ const nextConfig: NextConfig = {
       { source: '/cart', destination: '/korpa/', permanent: true },
       { source: '/hvala', destination: '/checkout/uspeh/', permanent: true },
       { source: '/shop', destination: '/prodavnica/', permanent: true },
+      { source: '/prirodni-cajevi', destination: '/biljni-cajevi/', permanent: true },
       {
         source: '/product-category/hladno-cedjena-ulja-2',
         destination: '/product-category/hladno-cedjena-ulja/',

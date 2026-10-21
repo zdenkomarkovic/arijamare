@@ -2,11 +2,14 @@
 
 import { createContext, useContext, useEffect, useState, useCallback } from 'react'
 import type { CartItem } from '@/types/shop'
+import { getShippingPrice } from '@/lib/shipping'
 
 interface CartContextValue {
   items: CartItem[]
   totalItems: number
   totalPrice: number
+  shippingPrice: number
+  grandTotal: number
   addItem: (item: Omit<CartItem, 'quantity'>, quantity?: number) => void
   removeItem: (id: string) => void
   updateQuantity: (id: string, quantity: number) => void
@@ -59,10 +62,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     (sum, i) => sum + ((i.salePrice ?? i.price) ?? 0) * i.quantity,
     0
   )
+  const shippingPrice = items.length > 0 ? getShippingPrice(totalPrice) : 0
+  const grandTotal = totalPrice + shippingPrice
 
   return (
     <CartContext.Provider
-      value={{ items, totalItems, totalPrice, addItem, removeItem, updateQuantity, clearCart }}
+      value={{ items, totalItems, totalPrice, shippingPrice, grandTotal, addItem, removeItem, updateQuantity, clearCart }}
     >
       {children}
     </CartContext.Provider>

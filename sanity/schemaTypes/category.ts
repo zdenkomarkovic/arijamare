@@ -5,7 +5,7 @@ export const categoryType = defineType({
   name: 'category',
   title: 'Kategorija',
   type: 'document',
-  groups: seoGroups,
+  groups: [...seoGroups, { name: 'page', title: 'Stranica kategorije' }],
   fields: [
     defineField({
       name: 'name',
@@ -47,6 +47,29 @@ export const categoryType = defineType({
       fields: [
         defineField({ name: 'alt', title: 'Alt tekst', type: 'string' }),
       ],
+    }),
+    defineField({
+      name: 'body',
+      title: 'Tekst stranice kategorije',
+      type: 'array',
+      group: 'page',
+      of: [{ type: 'block' }, { type: 'image', options: { hotspot: true } }],
+      description:
+        'Tekst na glavnoj stranici kategorije (/naziv-kategorije/), iznad kartica proizvoda. Naslov koji počinje sa „FAQ" i sve posle njega prikazuje se ispod kartica. Važi samo za glavne kategorije, ne i za podkategorije.',
+    }),
+    defineField({
+      name: 'pageSeoTitle',
+      title: 'SEO naslov stranice kategorije',
+      type: 'string',
+      group: 'page',
+      description: 'Ako je prazno, koristi se SEO naslov iz taba SEO.',
+    }),
+    defineField({
+      name: 'pageSeoDescription',
+      title: 'SEO opis stranice kategorije',
+      type: 'text',
+      rows: 3,
+      group: 'page',
     }),
     ...seoFields,
   ],

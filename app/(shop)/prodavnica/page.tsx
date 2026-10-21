@@ -7,17 +7,12 @@ import CategorySelect from '@/components/shop/CategorySelect'
 import Pagination from '@/components/shop/Pagination'
 
 import type { Metadata } from 'next'
-import { getSitePage } from '@/lib/sanity/queries'
 import { buildMetadata } from '@/lib/metadata'
 
-export async function generateMetadata(): Promise<Metadata> {
-  const page = await getSitePage('prodavnica')
-  return buildMetadata({
-    title: page?.seoTitle ?? 'Prodavnica',
-    description: page?.seoDescription,
-    url: '/prodavnica/',
-  })
-}
+export const metadata: Metadata = buildMetadata({
+  title: 'Prodavnica',
+  url: '/prodavnica/',
+})
 
 interface Props {
   searchParams: Promise<{ q?: string; kategorija?: string; page?: string }>
