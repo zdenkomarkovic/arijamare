@@ -1,10 +1,12 @@
 import Link from 'next/link'
+import PurchaseConversion from '@/components/checkout/PurchaseConversion'
 
 export const metadata = { title: 'Narudzbina primljena', robots: { index: false, follow: false } }
 
 export default function UspehPage() {
   return (
     <main className="max-w-lg mx-auto px-4 py-20 text-center">
+      <PurchaseConversion />
       <div className="text-5xl mb-6">✓</div>
       <h1 className="text-2xl font-semibold mb-3">Narudzbina je primljena!</h1>
       <p className="text-gray-500 mb-8">
